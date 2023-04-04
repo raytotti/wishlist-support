@@ -31,8 +31,8 @@ spec:
     spec:
       containers:
         - name: wishlist-support-api
-          image: wishlist-support-api:1.0
-          imagePullPolicy: Never
+          image: raytottifa/wishlist-support-api:latest
+          imagePullPolicy: Always
           ports:
           - containerPort: 8080
           env:
