@@ -1,0 +1,74 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: mongo-wl-sup
+  name: mongodb-wl-sup-service
+spec:
+  ports:
+  - port: 27017
+    targetPort: 27017
+  selector:
+    app: mongo-wl-sup
+  clusterIP: None
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mongo-wl-sup-pv-claim
+  labels:
+    app: mongo-wl-sup
+    tier: database
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mongo-wl-sup
+  labels:
+    app: mongo-wl-sup
+spec:
+  selector:
+    matchLabels:
+      app: mongo-wl-sup
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: mongo-wl-sup
+      name: mongodb-wl-sup-service
+
+    spec:
+      containers:
+      - image: mongo:latest
+        name: mongo
+
+        env:
+          - name: MONGO_INITDB_ROOT_USERNAME
+            valueFrom:
+              secretKeyRef:
+                name: mongo-wl-sup-secret
+                key: username
+          - name: MONGO_INITDB_ROOT_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: mongo-wl-sup-secret
+                key: password
+
+        ports:
+        - containerPort: 27017
+          name: mongo-wl-sup
+        volumeMounts:
+        - name: mongo-wl-sup-persistent-storage
+          mountPath: /data/db
+      volumes:
+      - name: mongo-wl-sup-persistent-storage
+        persistentVolumeClaim:
+          claimName: mongo-wl-sup-pv-claim

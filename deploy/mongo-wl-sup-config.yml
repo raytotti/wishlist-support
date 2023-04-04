@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mongo-wl-sup-conf
+data:
+  host: mongodb-wl-sup-service
+  database: db-wl-sup

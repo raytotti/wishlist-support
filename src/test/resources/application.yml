@@ -1,0 +1,9 @@
+spring:
+  data:
+    mongodb:
+      authentication-database: admin
+      password: test@123
+      username: test
+      database: db-wishlist-support-test
+      port: 27017
+      host: localhost
