@@ -2,6 +2,7 @@ package com.raytotti.wishlist.support.product.application;
 
 import com.raytotti.wishlist.support.product.domain.Product;
 import com.raytotti.wishlist.support.product.domain.ProductRepository;
+import com.raytotti.wishlist.support.product.exception.ProductExistsException;
 import com.raytotti.wishlist.support.product.exception.ProductNotFoundException;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.net.URI;
+import java.util.List;
 import java.util.Optional;
 
 import static org.springframework.web.servlet.support.ServletUriComponentsBuilder.fromCurrentRequest;
@@ -31,6 +33,12 @@ public class ProductController {
     @PostMapping
     public ResponseEntity<ProductResponse> create(@RequestBody @Valid CreateProductRequest request) {
         log.info("ProductController -> create: Solicitado a criação de um produto: {}", request);
+
+        boolean exists = repository.existsByCode(request.getCode());
+        if (exists) {
+            log.info("ProductController -> create: O produto com codigo {} já existe.", request.getCode());
+            throw new ProductExistsException();
+        }
 
         Product newProduct = Product.builder()
                 .code(request.getCode())
@@ -82,6 +90,16 @@ public class ProductController {
 
         log.info("ProductController -> findById: Produto encontrado. {}", productResponse);
         return ResponseEntity.ok(productResponse);
+    }
+
+    @GetMapping(path = "/")
+    public ResponseEntity<List<Product>> findAll() {
+        log.info("ProductController -> findAll: Solicitado a consulta de todos os produtos.");
+
+        List<Product> all = repository.findAll();
+
+        log.info("ProductController -> findAll: Produtos encontrados: {}", all);
+        return ResponseEntity.ok(all);
     }
 
 }

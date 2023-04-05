@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.net.URI;
+import java.util.List;
 import java.util.Optional;
 
 import static org.springframework.web.servlet.support.ServletUriComponentsBuilder.fromCurrentRequest;
@@ -93,6 +94,17 @@ public class ClientController {
             log.info("ClientController -> exists: O client com id {} não foi encontrado.", id);
             return ResponseEntity.notFound().build();
         }
+    }
+
+    @GetMapping(path = "/")
+    public ResponseEntity<List<Client>> findAll() {
+        log.info("ClientController -> findAll: Solicitado a consulta de todos os clientes");
+
+        List<Client> all = repository.findAll();
+
+        log.info("ClientController -> findAll: Clientes encontrados: {}", all);
+        return ResponseEntity.ok(all);
+
     }
 
 }
