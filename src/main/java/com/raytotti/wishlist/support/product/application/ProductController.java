@@ -92,7 +92,7 @@ public class ProductController {
         return ResponseEntity.ok(productResponse);
     }
 
-    @GetMapping(path = "/")
+    @GetMapping
     public ResponseEntity<List<Product>> findAll() {
         log.info("ProductController -> findAll: Solicitado a consulta de todos os produtos.");
 

@@ -96,7 +96,7 @@ public class ClientController {
         }
     }
 
-    @GetMapping(path = "/")
+    @GetMapping
     public ResponseEntity<List<Client>> findAll() {
         log.info("ClientController -> findAll: Solicitado a consulta de todos os clientes");
 
