@@ -1,4 +1,4 @@
-# Wishlist-Support Microservice API
+# Wishlist Support API Microservice
 This microservice is responsible for maintaining the necessary information for the functioning of the [Wishlist API microservice](https://github.com/raytotti/wishlist). It is built using Java 17, Spring Boot, Gradle and MongoDB, and is designed to be deployed using Kubernetes.
 
 ## Requirements
