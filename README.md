@@ -29,11 +29,15 @@ To deploy and run the microservice in your Kubernetes, you will need to followin
    ```
    
 ## Endpoints
+One of the options is to use the Swagger that is configured in the application at path `/swagger-ui.html`
+
+![Swagger](docs/swagger.png)
+
 The following endpoints are available in the microservice:
 
 ###
 #### Client
-* **POST /api/v1/clients** - Add a new client.
+* **POST /api/v1/clients** - Create a new client.
 ```shell
 curl --location --request POST 'http://<applicationUrl>:<applicationPort>/api/v1/clients' \
 --header 'Content-Type: application/json' \
@@ -61,7 +65,7 @@ curl --location --request GET 'http://<applicationUrl>:<applicationPort>/api/v1/
 
 ###
 #### Product
-* **POST /api/v1/clients** - Add a new product.
+* **POST /api/v1/clients** - Create a new product.
 ```shell
 curl --location --request POST 'http://<applicationUrl>:<applicationPort>/api/v1/products' \
 --header 'Content-Type: application/json' \

@@ -4,6 +4,11 @@ import com.raytotti.wishlist.support.client.domain.Client;
 import com.raytotti.wishlist.support.client.domain.ClientRepository;
 import com.raytotti.wishlist.support.client.exception.ClientExistsException;
 import com.raytotti.wishlist.support.client.exception.ClientNotFoundException;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,11 +31,20 @@ import static org.springframework.web.servlet.support.ServletUriComponentsBuilde
 @RestController
 @AllArgsConstructor
 @RequestMapping(path = "/api/v1/clients")
+@Tag(name = "Client", description = "Client API Operations")
 public class ClientController {
 
     private final ClientRepository repository;
 
     @PostMapping
+    @Operation(summary = "Create a new client")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Operation completed successfully."),
+            @ApiResponse(responseCode = "400", description = "Failed to validate! Request Invalid.", content = @Content),
+            @ApiResponse(responseCode = "409", description = "Failed to validate! CPF already exists.", content = @Content),
+            @ApiResponse(responseCode = "415", description = "Unsupported Content Type.", content = @Content),
+            @ApiResponse(responseCode = "500", description = "Unexpected system failure.", content = @Content)
+    })
     public ResponseEntity<ClientResponse> create(@RequestBody @Valid CreateClientRequest request) {
         log.info("ClientController -> create: Solicitado a criação de um cliente: {}", request);
 
@@ -53,6 +67,13 @@ public class ClientController {
     }
 
     @DeleteMapping(path = "/{id}")
+    @Operation(summary = "Remove an informed clientId.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "Operation completed successfully."),
+            @ApiResponse(responseCode = "400", description = "Failed to validate! Request Invalid.", content = @Content),
+            @ApiResponse(responseCode = "404", description = "Failed to validate! Client not found.", content = @Content),
+            @ApiResponse(responseCode = "500", description = "Unexpected system failure.", content = @Content)
+    })
     public ResponseEntity<Void> delete(@PathVariable String id) {
         log.info("ClientController -> delete: Solicitado a remoção do cliente com id: {}", id);
 
@@ -68,6 +89,13 @@ public class ClientController {
     }
 
     @GetMapping(path = "/{id}")
+    @Operation(summary = "Retrieve an informed clientId.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Operation completed successfully."),
+            @ApiResponse(responseCode = "400", description = "Failed to validate! Request Invalid.", content = @Content),
+            @ApiResponse(responseCode = "404", description = "Failed to validate! Client not found.", content = @Content),
+            @ApiResponse(responseCode = "500", description = "Unexpected system failure.", content = @Content)
+    })
     public ResponseEntity<ClientResponse> findById(@PathVariable String id) {
         log.info("ClientController -> findById: Solicitado a busca de um cliente pelo id {}.", id);
         Optional<Client> client = repository.findById(id);
@@ -82,6 +110,13 @@ public class ClientController {
     }
 
     @GetMapping(path = "/{id}/exists")
+    @Operation(summary = "Checks if the informed client exists.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Operation completed successfully."),
+            @ApiResponse(responseCode = "400", description = "Failed to validate! Request Invalid.", content = @Content),
+            @ApiResponse(responseCode = "404", description = "Failed to validate! Client not found.", content = @Content),
+            @ApiResponse(responseCode = "500", description = "Unexpected system failure.", content = @Content)
+    })
     public ResponseEntity<Boolean> exists(@PathVariable String id) {
         log.info("ClientController -> exists: Solicitado a verificação de existencia do cliente pelo id {}.", id);
 
@@ -97,6 +132,12 @@ public class ClientController {
     }
 
     @GetMapping
+    @Operation(summary = "Retrieve all clients.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Operation completed successfully."),
+            @ApiResponse(responseCode = "400", description = "Failed to validate! Request Invalid.", content = @Content),
+            @ApiResponse(responseCode = "500", description = "Unexpected system failure.", content = @Content)
+    })
     public ResponseEntity<List<Client>> findAll() {
         log.info("ClientController -> findAll: Solicitado a consulta de todos os clientes");
 
